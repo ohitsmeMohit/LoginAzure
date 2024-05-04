@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome</title>
+  <!-- <style>
+    .card {
+      display: inline-block;
+      width: 45%;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin: 10px;
+    }
+    input[type="text"],
+    input[type="number"],
+    button {
+      margin-bottom: 10px;
+    }
+  </style> -->
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .card {
+      display: inline-block;
+      align-items: center;
+      width: 30%;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      margin: 10px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    input[type="text"],
+    input[type="number"],
+    button {
+      margin-bottom: 10px;
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    span {
+      font-weight: bold;
+    }
+    </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Account Balance</h2>
+    <button type="button">Fetch Balance</button>
+    <p>Balance: <span id="balanceDisplay"></span></p>
+  </div>
+
+  <div class="card">
+    <h2>Send Money</h2>
+    <form id="sendMoneyForm">
+      <input type="text" name="receiverUsername" placeholder="Receiver's Username" required><br>
+      <input type="number" name="amount" placeholder="Amount" required><br>
+      <button type="submit">Send</button>
+    </form>
+  </div>
+
+</body>
+</html>

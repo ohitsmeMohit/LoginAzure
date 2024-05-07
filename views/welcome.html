@@ -60,6 +60,13 @@
       <button type="submit">Send</button>
     </form>
   </div>
+
+  <!-- Logout Button -->
+  <div class="card">
+    <h2>Logout</h2>
+    <button id="logoutBtn" type="button">Logout</button>
+  </div>
+
   <script>
     document.getElementById('fetchBalanceBtn').addEventListener('click', async () => {
       const response = await fetch('/balance', {
@@ -70,6 +77,18 @@
       });
       const data = await response.json();
       document.getElementById('balanceDisplay').textContent = data.balance;
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', async () => {
+      const response = await fetch('/logout', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      if (response.redirected) {
+        window.location.href = response.url; // Redirect to the login page
+      }
     });
   </script>
 </body>

@@ -9,8 +9,8 @@ const app = express();
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'public')));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // In-memory user storage
 // const users = [];
@@ -79,11 +79,21 @@ app.post('/login', async (req, res) => {
     }
 });
 
+app.get('/logout', (req, res) => {
+    // Clear the username cookie
+    res.clearCookie('username');
+    res.redirect('/login');
+});
 
 app.get('/welcome', (req, res) => {
+    // Check if user is authenticated
+    if (!req.cookies.username) {
+        return res.redirect('/login');
+    }
     res.sendFile(path.join(__dirname, 'views', 'welcome.html'));
 });
 
+// Add a route to fetch balance
 app.get('/balance', async (req, res) => {
     try {
         const username = req.cookies.username; // Retrieve username from cookie
@@ -101,8 +111,6 @@ app.get('/balance', async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
-
-
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

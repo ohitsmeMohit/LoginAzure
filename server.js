@@ -34,6 +34,10 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'signup.html'));
 });
 
+app.get('/signup', (req, res) => {
+    res.sendFile(path.join(__dirname, 'views', 'signup.html'));
+});
+
 app.post('/signup', async (req, res) => {
     const { username, password, email } = req.body;
     try {

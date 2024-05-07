@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
+const cookieParser = require('cookie-parser');
 
 const app = express();
 
@@ -9,6 +10,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cookieParser());
 
 // In-memory user storage
 // const users = [];
@@ -68,6 +70,8 @@ app.post('/login', async (req, res) => {
         if (!user) {
             return res.status(401).send('Invalid username or password');
         }
+        // Set cookie with user's username
+        res.cookie('username', username);
         res.redirect('/welcome');
     } catch (error) {
         console.error('Error during login:', error);
@@ -75,9 +79,30 @@ app.post('/login', async (req, res) => {
     }
 });
 
+
 app.get('/welcome', (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'welcome.html'));
 });
+
+app.get('/balance', async (req, res) => {
+    try {
+        const username = req.cookies.username; // Retrieve username from cookie
+        if (!username) {
+            return res.status(401).send('User not authenticated');
+        }
+        // Find user by username
+        const user = await User.findOne({ username });
+        if (!user) {
+            return res.status(401).send('User not found');
+        }
+        res.json({ balance: user.balance });
+    } catch (error) {
+        console.error('Error fetching balance:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

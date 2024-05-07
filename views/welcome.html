@@ -48,7 +48,7 @@
 <body>
   <div class="card">
     <h2>Account Balance</h2>
-    <button type="button">Fetch Balance</button>
+    <button id="fetchBalanceBtn" type="button">Fetch Balance</button>
     <p>Balance: <span id="balanceDisplay"></span></p>
   </div>
 
@@ -60,6 +60,17 @@
       <button type="submit">Send</button>
     </form>
   </div>
-
+  <script>
+    document.getElementById('fetchBalanceBtn').addEventListener('click', async () => {
+      const response = await fetch('/balance', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const data = await response.json();
+      document.getElementById('balanceDisplay').textContent = data.balance;
+    });
+  </script>
 </body>
 </html>

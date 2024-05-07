@@ -3,17 +3,12 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
-
 const app = express();
 
-// Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
-// In-memory user storage
-// const users = [];
 
 mongoose.connect('mongodb://localhost:27017/demo', { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;

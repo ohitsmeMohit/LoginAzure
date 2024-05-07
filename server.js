@@ -116,6 +116,40 @@ app.get('/balance', async (req, res) => {
     }
 });
 
+// Add a route to handle sending money
+app.post('/send-money', async (req, res) => {
+    try {
+        const { receiverUsername, amount } = req.body;
+        console.log(receiverUsername, amount);
+        const senderUsername = req.cookies.username; // Get sender's username from cookie
+        console.log(senderUsername);
+        if (!senderUsername) {
+            return res.status(401).send('User not authenticated');
+        }
+        // Find sender and receiver by usernames
+        const sender = await User.findOne({ username: senderUsername });
+        const receiver = await User.findOne({ username: receiverUsername });
+        if (!sender || !receiver) {
+            return res.status(404).send('Sender or receiver not found');
+        }
+        // Check if sender has enough balance
+        if (sender.balance < amount) {
+            return res.status(400).send('Insufficient balance');
+        }
+        // Update balances
+        sender.balance -= amount;
+        receiver.balance += Number(amount);
+        // Save updated balances
+        await sender.save();
+        await receiver.save();
+        res.send('Money sent successfully');
+    } catch (error) {
+        console.error('Error sending money:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

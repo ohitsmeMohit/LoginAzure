@@ -9,12 +9,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+const mongostring = "mongodb://mk-mongo:6MACyvG8WvxuJlN4aVQOSGS3a5Gs3O6YFxrYFDmYI8k5Tezt29q2iL8dWcOIuzK9VwaJmAWT8FjlACDbJPL3Ig%3D%3D@mk-mongo.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&maxIdleTimeMS=120000&appName=@mk-mongo@"
 
-mongoose.connect('mongodb://localhost:27017/demo', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(mongostring, 
+    { 
+        useNewUrlParser: true, 
+        useUnifiedTopology: true 
+    });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', function() {
-    console.log('Connected to MongoDB');
+    console.log('Connected to CosmosDB');
 });
 
 const User = mongoose.model('User', {

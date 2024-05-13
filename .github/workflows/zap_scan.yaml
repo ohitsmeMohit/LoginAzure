@@ -1,14 +1,51 @@
-on:
-  schedule:
-    # Runs every day At 01:00.
-    - cron:  '0 1 * * *'
+name: ZAP Scan
+
+on: [push, pull_request]
 
 jobs:
-  zap_scan:
+  zap-scan:
     runs-on: ubuntu-latest
-    name: Scan ZAP website
+
     steps:
-      - name: ZAP Scan
-        uses: zaproxy/action-baseline@v0.3.0
-        with:
-          target: 'https://www.zaproxy.org/'
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Dependencies
+      run: npm install
+
+    # - name: Build
+    #   run: npm run dev
+
+    # - name: Start Application
+    #   run: npm start
+      
+    # - name: Run ZAP Scan
+    #   uses: zaproxy/action-full-scan@v0.10.0
+    #   with:
+    #     url: 'http://52.253.87.247:3000/'  # Update with your application's URL
+    #     token: secrets.GITHUB_TOKEN
+
+    - name: ZAP Baseline Scan
+      # You may pin to the exact commit or the version.
+      # uses: zaproxy/action-baseline@66042c8e7e24680119199a017e5b0e8603bf4dae
+      uses: zaproxy/action-baseline@v0.12.0
+      with:
+         # GitHub Token to create issues in the repository
+         token: ${{ github.token }}
+         # Target URL
+         target: "http://52.253.87.247:3000"
+         # Relative path of the ZAP configuration file
+         # rules_file_name: # optional
+         # The Docker file to be executed
+         # docker_name: # default is ghcr.io/zaproxy/zaproxy:stable
+         # Additional command line options
+         # cmd_options: # optional
+         # The title for the GitHub issue to be created
+         # issue_title: # optional, default is ZAP Scan Baseline Report
+         # # The action status will be set to fail if ZAP identifies any alerts during the baseline scan
+         # fail_action: # optional
+         # # The action will file the report to the GitHub issue using the issue_title input
+         # allow_issue_writing: # optional, default is true
+         # # The name of the artifact that contains the ZAP reports
+         # artifact_name: # optional, default is zap_scan
+            

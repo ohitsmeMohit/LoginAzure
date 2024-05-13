@@ -1,14 +1,15 @@
+name: zapfull-security-scan
 on:
-  schedule:
-    # Runs every day At 01:00.
-    - cron:  '0 1 * * *'
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
 
 jobs:
-  zap_scan:
+  build:
     runs-on: ubuntu-latest
-    name: Scan ZAP website
-    steps:
-      - name: ZAP Scan
-        uses: zaproxy/action-baseline@v0.3.0
-        with:
-          target: 'https://www.zaproxy.org/'
+    steps:     
+    - name: OWASP ZAP Full Scan
+      uses: zaproxy/action-full-scan@v0.1.0
+      with:
+        target: "http://52.253.87.247:3000/"

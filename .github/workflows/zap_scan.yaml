@@ -1,14 +1,25 @@
-on:
-  schedule:
-    # Runs every day At 01:00.
-    - cron:  '0 1 * * *'
+name: ZAP Scan
+
+on: [push, pull_request]
 
 jobs:
-  zap_scan:
+  zap-scan:
     runs-on: ubuntu-latest
-    name: Scan ZAP website
+
     steps:
-      - name: ZAP Scan
-        uses: zaproxy/action-baseline@v0.3.0
-        with:
-          target: 'https://www.zaproxy.org/'
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Dependencies
+      run: npm install
+
+    - name: Build
+      run: npm run build
+
+    - name: Start Application
+      run: npm start
+      
+    - name: Run ZAP Scan
+      uses: zaproxy/action-baseline@v1
+      with:
+        zap-baseline-url: 'http://52.253.87.247:3000/'  # Update with your application's URL

@@ -1,0 +1,40 @@
+name: Build check
+
+on:
+  push:
+    branches:
+      - master
+      - feature/*
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+  workflow_call:
+
+
+permissions:
+  contents: read
+  packages: write
+  actions: read
+  pull-requests: write
+  security-events: write
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies and Build
+        run: |
+          npm install
+          npm run build
+  
+  # security:
+  #   name: Security Scan
+  #   needs: build
+  #   uses: ./.github/workflows/codeql.yml

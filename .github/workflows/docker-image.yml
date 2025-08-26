@@ -1,10 +1,19 @@
 name: Docker Image CI
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+  # push:
+  #   branches: [ "master" ]
+  # pull_request:
+  #   branches: [ "master" ]
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+  actions: read
+  pull-requests: write
+  security-events: write
 
 jobs:
 

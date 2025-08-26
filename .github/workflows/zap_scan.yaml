@@ -1,6 +1,6 @@
 name: ZAP Scan
 
-on: [push, pull_request]
+# on: [push, pull_request]
 
 jobs:
   zap-scan:

@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "npm ci",
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "nodemon server.js",
+    "lint": "eslint .",
+    "test": "jest --passWithNoTests"
   },
   "keywords": [],
   "author": "",
@@ -18,5 +21,18 @@
     "mongoose": "^8.3.4",
     "nodemon": "^3.1.0",
     "pip": "^0.0.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.34.0",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/express": "^5.0.3",
+    "@types/mongoose": "^5.11.97",
+    "@types/node": "^24.3.0",
+    "eslint": "^8.57.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-security": "^3.0.1",
+    "globals": "^16.3.0",
+    "typescript": "^5.9.2"
   }
 }

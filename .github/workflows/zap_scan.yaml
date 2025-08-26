@@ -1,6 +1,9 @@
 name: ZAP Scan
 
 # on: [push, pull_request]
+on:
+  workflow_call:
+  workflow_dispatch:
 
 jobs:
   zap-scan:

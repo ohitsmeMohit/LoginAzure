@@ -21,15 +21,16 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Initialize CodeQL
+    - name: Init CodeQL
       uses: github/codeql-action/init@v3
       with:
         languages: javascript
-    - name: Perform CodeQL Analysis
+        
+    - name: Auto Build
       uses: github/codeql-action/autobuild@v3
-    - name: Initialize CodeQL
+      
+    - name: Analyze CodeQL
       uses: github/codeql-action/analyze@v3
-    - name: Upload SARIF report
-      uses: github/codeql-action/upload-sarif@v3
       with:
-        sarif_file:  /home/runner/work/LoginAzure/results/javascript.sarif
+        category: javascript-analysis
+        output: ${{ github.workspace }}/results

@@ -121,7 +121,7 @@ app.get('/balance', async (req, res) => {
 app.post('/send-money', sendMoneyLimiter, async (req, res) => {
     try {
         const { receiverUsername, amount } = req.body;
-        console.log(receiverUsername, amount);
+        console.log("receiverUsername: %s, amount: %s", receiverUsername, amount);
         const senderUsername = req.cookies.username; // Get sender's username from cookie
         console.log(senderUsername);
         if (!senderUsername) {

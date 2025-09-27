@@ -28,7 +28,8 @@
     "pip": "^0.0.1",
     "send": "^1.2.0",
     "serve-static": "^2.2.0",
-    "express-rate-limit": "^8.1.0"
+    "express-rate-limit": "^8.1.0",
+    "lusca": "^1.7.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.34.0",

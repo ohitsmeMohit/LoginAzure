@@ -127,6 +127,12 @@ app.get('/balance', async (req, res) => {
 });
 
 // Add a route to handle sending money
+const sendMoneyLimiter = rateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute window
+    max: 5, // limit each IP to 5 requests per windowMs
+    message: 'Too many requests, please try again later.'
+});
+
 app.post('/send-money', sendMoneyLimiter, async (req, res) => {
     try {
         const { receiverUsername, amount } = req.body;
@@ -159,12 +165,6 @@ app.post('/send-money', sendMoneyLimiter, async (req, res) => {
     }
 });
 
-
-const sendMoneyLimiter = rateLimit({
-    windowMs: 1 * 60 * 1000, // 1 minute window
-    max: 5, // limit each IP to 5 requests per windowMs
-    message: 'Too many requests, please try again later.'
-});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

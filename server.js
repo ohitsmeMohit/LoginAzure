@@ -7,6 +7,13 @@ const rateLimit = require('express-rate-limit');
 const lusca = require('lusca');
 const app = express();
 
+// Rate limiter for signup page to prevent abuse
+const signupLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute window
+    max: 10, // limit to 10 requests per minute per IP
+    message: "Too many requests from this IP, please try again later."
+});
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -33,11 +40,11 @@ const User = mongoose.model('User', {
 });
 
 // Routes
-app.get('/', (req, res) => {
+app.get('/', signupLimiter, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'signup.html'));
 });
 
-app.get('/signup', (req, res) => {
+app.get('/signup', signupLimiter, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'signup.html'));
 });
 

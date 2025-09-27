@@ -3,11 +3,21 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
+const lusca = require('lusca');
 const app = express();
+
+// Rate limiter for signup page to prevent abuse
+const signupLimiter = rateLimit({
+    windowMs: 60 * 1000, // 1 minute window
+    max: 10, // limit to 10 requests per minute per IP
+    message: "Too many requests from this IP, please try again later."
+});
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(lusca.csrf());
 app.use(express.static(path.join(__dirname, 'public')));
 const mongostring = "mongodb://mk-mongo:6MACyvG8WvxuJlN4aVQOSGS3a5Gs3O6YFxrYFDmYI8k5Tezt29q2iL8dWcOIuzK9VwaJmAWT8FjlACDbJPL3Ig%3D%3D@mk-mongo.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&maxIdleTimeMS=120000&appName=@mk-mongo@"
 
@@ -30,11 +40,11 @@ const User = mongoose.model('User', {
 });
 
 // Routes
-app.get('/', (req, res) => {
+app.get('/', signupLimiter, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'signup.html'));
 });
 
-app.get('/signup', (req, res) => {
+app.get('/signup', signupLimiter, (req, res) => {
     res.sendFile(path.join(__dirname, 'views', 'signup.html'));
 });
 
@@ -75,7 +85,7 @@ app.post('/login', async (req, res) => {
             return res.status(401).send('Invalid username or password');
         }
         // Set cookie with user's username
-        res.cookie('username', username);
+        res.cookie('username', username, { secure: true, httpOnly: true });
         res.redirect('/welcome');
     } catch (error) {
         console.error('Error during login:', error);
@@ -117,10 +127,16 @@ app.get('/balance', async (req, res) => {
 });
 
 // Add a route to handle sending money
-app.post('/send-money', async (req, res) => {
+const sendMoneyLimiter = rateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute window
+    max: 5, // limit each IP to 5 requests per windowMs
+    message: 'Too many requests, please try again later.'
+});
+
+app.post('/send-money', sendMoneyLimiter, async (req, res) => {
     try {
         const { receiverUsername, amount } = req.body;
-        console.log(receiverUsername, amount);
+        console.log("receiverUsername: %s, amount: %s", receiverUsername, amount);
         const senderUsername = req.cookies.username; // Get sender's username from cookie
         console.log(senderUsername);
         if (!senderUsername) {
@@ -128,7 +144,7 @@ app.post('/send-money', async (req, res) => {
         }
         // Find sender and receiver by usernames
         const sender = await User.findOne({ username: senderUsername });
-        const receiver = await User.findOne({ username: receiverUsername });
+        const receiver = await User.findOne({ username: { $eq: receiverUsername } });
         if (!sender || !receiver) {
             return res.status(404).send('Sender or receiver not found');
         }

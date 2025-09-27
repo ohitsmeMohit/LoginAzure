@@ -75,7 +75,7 @@ app.post('/login', async (req, res) => {
             return res.status(401).send('Invalid username or password');
         }
         // Set cookie with user's username
-        res.cookie('username', username);
+        res.cookie('username', username, { secure: true, httpOnly: true });
         res.redirect('/welcome');
     } catch (error) {
         console.error('Error during login:', error);

@@ -128,7 +128,7 @@ app.post('/send-money', async (req, res) => {
         }
         // Find sender and receiver by usernames
         const sender = await User.findOne({ username: senderUsername });
-        const receiver = await User.findOne({ username: receiverUsername });
+        const receiver = await User.findOne({ username: { $eq: receiverUsername } });
         if (!sender || !receiver) {
             return res.status(404).send('Sender or receiver not found');
         }

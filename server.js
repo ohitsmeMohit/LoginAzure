@@ -4,11 +4,13 @@ const path = require('path');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const rateLimit = require('express-rate-limit');
+const lusca = require('lusca');
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(lusca.csrf());
 app.use(express.static(path.join(__dirname, 'public')));
 const mongostring = "mongodb://mk-mongo:6MACyvG8WvxuJlN4aVQOSGS3a5Gs3O6YFxrYFDmYI8k5Tezt29q2iL8dWcOIuzK9VwaJmAWT8FjlACDbJPL3Ig%3D%3D@mk-mongo.mongo.cosmos.azure.com:10255/?ssl=true&retrywrites=false&maxIdleTimeMS=120000&appName=@mk-mongo@"
 

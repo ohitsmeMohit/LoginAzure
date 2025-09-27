@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
+const rateLimit = require('express-rate-limit');
 const app = express();
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -117,7 +118,7 @@ app.get('/balance', async (req, res) => {
 });
 
 // Add a route to handle sending money
-app.post('/send-money', async (req, res) => {
+app.post('/send-money', sendMoneyLimiter, async (req, res) => {
     try {
         const { receiverUsername, amount } = req.body;
         console.log(receiverUsername, amount);
@@ -149,6 +150,12 @@ app.post('/send-money', async (req, res) => {
     }
 });
 
+
+const sendMoneyLimiter = rateLimit({
+    windowMs: 1 * 60 * 1000, // 1 minute window
+    max: 5, // limit each IP to 5 requests per windowMs
+    message: 'Too many requests, please try again later.'
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
